@@ -9,3 +9,9 @@ class FoodAdmin(admin.ModelAdmin):
 
     list_display = ['name']
     list_filter = ['name']
+
+
+admin.site.register(Customer)
+admin.site.register(UserFoodItem)
+admin.site.register(Category)
+admin.site.register(FoodItem, FoodAdmin)
