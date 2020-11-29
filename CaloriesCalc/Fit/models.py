@@ -36,4 +36,9 @@ class FoodItem(models.Model):
     quantity = models.IntegerField(default=1, null=True, blank=True)
 
     def __str__(self):
-        return
+        return str(self.name)
+
+
+class UserFoodItem(models.Model):
+    customer = models.ManyToManyField(Customer, blank=True)
+    foodItem = models.ManyToManyField(FoodItem)
