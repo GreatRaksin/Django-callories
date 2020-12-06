@@ -96,3 +96,52 @@ def login(request):
             messages.info(request, 'Username or/and password is invalid')
     return render(request, 'login.html')
 
+
+@login_required(login_url='login')
+def logout(request):
+    logout(request)
+    return redirect('login')
+
+
+def userPage(request):
+    user = request.user
+    cust = user.customer
+    fooditems = FoodItem.objects.filter()
+    myfilter = fooditemFilter(request.GET, queryset=fooditems)
+    fooditems = myfilter.qs
+    total = UserFoodItem.objects.all()
+    myfooditem = total.filter(customer=cust)
+    cnt = myfooditem.count()
+    querysetFood = []
+    for food in myfooditem:
+        querysetFood.append(food.fooditem.all)
+    finalFoodItems = []
+    for items in querysetFood:
+        for food_items in items:
+            finalFoodItems.append(food_items)
+    totalCalories = 0
+    for foods in finalFoodItems:
+        totalCalories += foods.calorie
+    caloriesLeft = 2500 - totalCalories
+    context = {
+        'CaloriesLeft': caloriesLeft,
+        'TotalCalories': totalCalories,
+        'cnt': cnt,
+        'FoodList': finalFoodItems,
+        'FoodItem': fooditems,
+        'MyFilter': myfilter
+    }
+    return render(request, 'user.html', context)
+
+
+def addFoodItem(request):
+    user = request.user
+    cust = user.customer
+    if request.method == 'POST':
+        form = AddUserFoodItem(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    form = AddUserFoodItem()
+    context = {'form': form}
+    return render(request, 'addFoodItem.html', context)
