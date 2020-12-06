@@ -81,3 +81,18 @@ def register(request):
             messages.success(request, f'Account created for {username}')
     context = {'form': form}
     return render(request, 'register.html', context)
+
+
+@unauthorised_user
+def login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.info(request, 'Username or/and password is invalid')
+    return render(request, 'login.html')
+
