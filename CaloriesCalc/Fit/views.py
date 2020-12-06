@@ -12,7 +12,6 @@ from .filter import *
 
 
 @login_required(login_url='login')
-@admin_only
 def home(requet):
     breakfast = Category.objects.filter(name='breakfast')[0].fooditem_set.all()[:5]
     lunch = Category.objects.filter(name='lunch')[0].fooditem_set.all()[:5]
@@ -52,3 +51,18 @@ def fooditem(requet):
         's_count': s_count,
     }
     return render(requet, 'fooditem.html', context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def createFoodItem(request):
+    form = FoodItemForm()
+    if request.method == 'POST':
+        form = FoodItemForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    context = {'form': form}
+    return render(request, 'createfooditem.html', context)
+
+
