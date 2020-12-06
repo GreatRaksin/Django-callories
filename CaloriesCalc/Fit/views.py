@@ -66,3 +66,18 @@ def createFoodItem(request):
     return render(request, 'createfooditem.html', context)
 
 
+@unauthorised_user
+def register(request):
+    form = CreateUserForm()
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            group = Group.objects.get(name='user')
+            user.groups.add(group)
+            email = form.cleaned_data.get('email')
+            Customer.objects.create(user=user, name=username, email=email)
+            messages.success(request, f'Account created for {username}')
+    context = {'form': form}
+    return render(request, 'register.html', context)
