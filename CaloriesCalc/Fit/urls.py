@@ -6,11 +6,11 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('user/', views.userPage, name='userPage'),
     path('product/', views.fooditem, name='fooditem'),
-    path('createfooditem/', views.createfooditem, name='createfooditem'),
+    path('createfooditem/', views.createFoodItem, name='createfooditem'),
     path('register/', views.register, name='register'),
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
-    path('addFooditem/', views.addFooditem, name='addFooditem'),
+    path('addFooditem/', views.addFoodItem, name='addFooditem'),
 
     path('reset_password/',
          auth_views.PasswordResetView.as_view(),
